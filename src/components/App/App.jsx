@@ -16,10 +16,11 @@ export default function App() {
       try {
         setIsLoader(true);
         const fetchGallary = await getGallary("cars");
-        setIsLoader(false);
         setArtgallary(fetchGallary);
       } catch (error) {
         setIsError(true);
+      } finally {
+        setIsLoader(false);
       }
     }
     fetchGallary();
