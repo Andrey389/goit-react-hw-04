@@ -15,7 +15,7 @@ export default function App() {
     async function fetchGallary() {
       try {
         setIsLoader(true);
-        const fetchGallary = await getGallary();
+        const fetchGallary = await getGallary("cars");
         setIsLoader(false);
         setArtgallary(fetchGallary);
       } catch (error) {
