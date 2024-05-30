@@ -16,8 +16,8 @@ export default function SearchForm({ onSearch }) {
           className={css.textInput}
           type="text"
           name="query"
-          autocomplete="off"
-          autofocus
+          // autocomplete="off"
+          // autofocus
           placeholder="Search images and photos"
         />
         <button type="submit">Search</button>
