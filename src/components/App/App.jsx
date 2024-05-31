@@ -13,7 +13,7 @@ export default function App() {
   const [isError, setIsError] = useState(false);
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  // const [sumPage, setSumPage] = useState(totalPage);
+  const [totalPages, setTotalPages] = useState(false);
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
@@ -23,9 +23,10 @@ export default function App() {
       try {
         setIsLoader(true);
         setIsError(false);
-        const fetchGallary = await getGallary(searchQuery, page);
+        const { fetchGallary, total } = await getGallary(searchQuery, page);
+
         setArtgallary((prevState) => [...prevState, ...fetchGallary]);
-        // setSumPage(artgallary.total_pages);
+        setTotalPages(page < Math.ceil(total / 15));
       } catch (error) {
         setIsError(true);
       } finally {
@@ -45,16 +46,14 @@ export default function App() {
     setPage(page + 1);
   };
 
-  // const isLastPage = page >= totalPage;
-
   return (
     <>
       <SearchBar onSearch={handleSearch} />
       {artgallary.length > 0 && <ImageGallary images={artgallary} />}
       {isLoader && <Loader />}
       {isError && <ErrorMessage />}
-      {artgallary.length > 0 && !isLoader && (
-        <LoadMoreBtn onClick={handleLoadMoreBtn} onDisable={isLastPage} />
+      {artgallary.length > 0 && !isLoader && totalPages && (
+        <LoadMoreBtn onClick={handleLoadMoreBtn} />
       )}
     </>
   );
