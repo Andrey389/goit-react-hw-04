@@ -2,7 +2,7 @@ import axios from "axios";
 
 const baseURL = "https://api.unsplash.com/";
 
-const API_KEY = "4J8jSPPSjIZBvyaks-vAdWLGI8o9eC1m7FXYBkS6hx8";
+const API_KEY = "gyEotlsTfMSlLu_xuTDVFFzdKddQrQNccZ1wXUj9oDQ";
 
 export const getGallary = async (topic, currentPage) => {
   const response = await axios.get(`${baseURL}/search/photos`, {
@@ -13,5 +13,5 @@ export const getGallary = async (topic, currentPage) => {
       per_page: 4,
     },
   });
-  return response.data.results;
+  return response.data;
 };

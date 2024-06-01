@@ -5,6 +5,7 @@ import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import ImageGallary from "../ImageGallary/ImageGallary";
 import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
+import ImageModal from "../ImageModal/ImageModal";
 import "./App.css";
 
 export default function App() {
@@ -14,6 +15,8 @@ export default function App() {
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [totalPages, setTotalPages] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [selImageUrl, setSelImageUrl] = useState("");
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
@@ -23,10 +26,10 @@ export default function App() {
       try {
         setIsLoader(true);
         setIsError(false);
-        const { fetchGallary, total } = await getGallary(searchQuery, page);
+        const { results, total_pages } = await getGallary(searchQuery, page);
 
-        setArtgallary((prevState) => [...prevState, ...fetchGallary]);
-        setTotalPages(page < Math.ceil(total / 15));
+        setArtgallary((prevState) => [...prevState, ...results]);
+        setTotalPages(page < Math.ceil(total_pages / 15));
       } catch (error) {
         setIsError(true);
       } finally {
@@ -46,15 +49,32 @@ export default function App() {
     setPage(page + 1);
   };
 
+  const openImageModal = (imageUrl) => {
+    setSelImageUrl(imageUrl);
+    setIsOpenModal(true);
+  };
+
+  const closeImageModal = () => {
+    setSelImageUrl("");
+    setIsOpenModal(false);
+  };
+
   return (
     <>
       <SearchBar onSearch={handleSearch} />
-      {artgallary.length > 0 && <ImageGallary images={artgallary} />}
+      {artgallary.length > 0 && (
+        <ImageGallary images={artgallary} onOpenModal={openImageModal} />
+      )}
       {isLoader && <Loader />}
       {isError && <ErrorMessage />}
       {artgallary.length > 0 && !isLoader && totalPages && (
         <LoadMoreBtn onClick={handleLoadMoreBtn} />
       )}
+      <ImageModal
+        isOpen={isOpenModal}
+        onClose={closeImageModal}
+        imageUrl={selImageUrl}
+      />
     </>
   );
 }
