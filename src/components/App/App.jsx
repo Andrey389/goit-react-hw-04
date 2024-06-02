@@ -3,13 +3,13 @@ import { getGallary } from "../../Api";
 import SearchBar from "../SearchBar/SearchBar";
 import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
-import ImageGallary from "../ImageGallary/ImageGallary";
+import ImageGallery from "../ImageGallery/ImageGallery";
 import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
 import ImageModal from "../ImageModal/ImageModal";
 import "./App.css";
 
 export default function App() {
-  const [artgallary, setArtgallary] = useState([]);
+  const [artgallery, setArtgallery] = useState([]);
   const [isLoader, setIsLoader] = useState(false);
   const [isError, setIsError] = useState(false);
   const [page, setPage] = useState(1);
@@ -28,7 +28,7 @@ export default function App() {
         setIsError(false);
         const { results, total_pages } = await getGallary(searchQuery, page);
 
-        setArtgallary((prevState) => [...prevState, ...results]);
+        setArtgallery((prevState) => [...prevState, ...results]);
         setTotalPages(page < Math.ceil(total_pages / 15));
       } catch (error) {
         setIsError(true);
@@ -42,7 +42,7 @@ export default function App() {
   const handleSearch = async (topic) => {
     setSearchQuery(topic);
     setPage(1);
-    setArtgallary([]);
+    setArtgallery([]);
   };
 
   const handleLoadMoreBtn = () => {
@@ -62,12 +62,12 @@ export default function App() {
   return (
     <>
       <SearchBar onSearch={handleSearch} />
-      {artgallary.length > 0 && (
-        <ImageGallary images={artgallary} onOpenModal={openImageModal} />
+      {artgallery.length > 0 && (
+        <ImageGallery images={artgallery} onOpenModal={openImageModal} />
       )}
       {isLoader && <Loader />}
       {isError && <ErrorMessage />}
-      {artgallary.length > 0 && !isLoader && totalPages && (
+      {artgallery.length > 0 && !isLoader && totalPages && (
         <LoadMoreBtn onClick={handleLoadMoreBtn} />
       )}
       <ImageModal
